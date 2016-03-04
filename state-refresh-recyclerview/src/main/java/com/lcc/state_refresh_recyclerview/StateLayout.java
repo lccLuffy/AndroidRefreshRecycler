@@ -1,4 +1,4 @@
-package com.lcc.refresh;
+package com.lcc.state_refresh_recyclerview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,9 +18,9 @@ import android.widget.TextView;
  */
 public class StateLayout extends FrameLayout{
 
-    public static final String DEFAULT_ERROR_TEXT = "出错了-_-";
-    public static final String DEFAULT_EMPTY_TEXT = "这儿啥也没有";
-    public static final String DEFAULT_PROGRESS_TEXT = "正在拼命加载...";
+    public static final String DEFAULT_ERROR_TEXT = "Something went wrong-_-";
+    public static final String DEFAULT_EMPTY_TEXT = "here is empty";
+    public static final String DEFAULT_PROGRESS_TEXT = "loading...";
 
 
     protected FrameLayout content;

@@ -1,4 +1,4 @@
-package com.lcc.refresh.Recycler;
+package com.lcc.state_refresh_recyclerview.Recycler;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
@@ -8,8 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
-import com.lcc.refresh.StateLayout;
+import com.lcc.state_refresh_recyclerview.StateLayout;
 
 /**
  * Created by lcc_luffy on 2016/1/30.
@@ -39,7 +40,7 @@ public class StateRecyclerView extends StateLayout {
     {
         initViews();
 
-        setErrorAction("重试", new OnClickListener() {
+        setErrorAction("重试", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onRefreshListener != null) {
@@ -48,7 +49,7 @@ public class StateRecyclerView extends StateLayout {
             }
         });
 
-        setEmptyAction("重试", new OnClickListener() {
+        setEmptyAction("重试", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onRefreshListener != null) {
@@ -62,12 +63,12 @@ public class StateRecyclerView extends StateLayout {
     private void initViews()
     {
         swipeRefreshLayout = new SwipeRefreshLayout(getContext());
-        swipeRefreshLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        swipeRefreshLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         addContentView(swipeRefreshLayout);
 
         recyclerView = new RecyclerView(getContext());
-        recyclerView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        recyclerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         swipeRefreshLayout.addView(recyclerView);
     }
@@ -204,7 +205,7 @@ public class StateRecyclerView extends StateLayout {
     }
 
 
-    public void setOnTouchListener(OnTouchListener listener) {
+    public void setOnTouchListener(View.OnTouchListener listener) {
         recyclerView.setOnTouchListener(listener);
     }
 

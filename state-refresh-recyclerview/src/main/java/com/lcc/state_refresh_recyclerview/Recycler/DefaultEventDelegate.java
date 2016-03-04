@@ -1,4 +1,4 @@
-package com.lcc.refresh.Recycler;
+package com.lcc.state_refresh_recyclerview.Recycler;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.lcc.refresh.R;
+import com.lcc.state_refresh_recyclerview.R;
 
 /**
  * Created by lcc_luffy on 2016/1/11.

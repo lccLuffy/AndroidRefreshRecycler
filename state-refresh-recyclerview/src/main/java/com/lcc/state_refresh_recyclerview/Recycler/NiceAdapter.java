@@ -1,4 +1,4 @@
-package com.lcc.refresh.Recycler;
+package com.lcc.state_refresh_recyclerview.Recycler;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
@@ -279,7 +279,7 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
     }
 
     /**
-     * 这个函数包含了头部和尾部view的个数，不是真正的item个数。
+     *
      * @return
      */
     @Override

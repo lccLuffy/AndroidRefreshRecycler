@@ -1,29 +1,14 @@
 package com.lcc.refresh;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.lcc.refresh.Recycler.NiceAdapter;
-import com.lcc.refresh.Recycler.NiceViewHolder;
-import com.lcc.refresh.Recycler.StateRecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
-    StateRecyclerView stateRecyclerView;
-    NiceAdapter<String> adapter;
+    /*StateRecyclerView stateRecyclerView;
+    NiceAdapter<String> adapter;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        /*setContentView(R.layout.activity_main);
         stateRecyclerView = (StateRecyclerView) findViewById(R.id.stateRecyclerView);
         stateRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Adapter(this);
@@ -62,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 adapter.initData(data);
             }
-        },2000);
+        },2000);*/
 
     }
 
-    class Adapter extends NiceAdapter<String> {
+    /*class Adapter extends NiceAdapter<String> {
 
         public Adapter(Context context) {
             super(context);
@@ -89,5 +74,5 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(data);
             }
         }
-    }
+    }*/
 }
