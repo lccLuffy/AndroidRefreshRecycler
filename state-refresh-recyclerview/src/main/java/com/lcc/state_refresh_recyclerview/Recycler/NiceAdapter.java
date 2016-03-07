@@ -27,7 +27,7 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     /**
-     * Lock used to modify the content of {@link #data}. Any write operation
+     * Lock used to modify the contents of {@link #data}. Any write operation
      * performed on the array should be synchronized on this lock.
      */
     private final Object mLock = new Object();

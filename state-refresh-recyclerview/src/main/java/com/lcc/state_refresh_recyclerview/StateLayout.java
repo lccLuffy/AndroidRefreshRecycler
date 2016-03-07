@@ -3,14 +3,13 @@ package com.lcc.state_refresh_recyclerview;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -23,10 +22,11 @@ public class StateLayout extends FrameLayout{
     public static final String DEFAULT_PROGRESS_TEXT = "loading...";
 
 
-    protected FrameLayout content;
-    protected LinearLayout emptyView;
-    protected LinearLayout errorView;
-    protected LinearLayout progressView;
+    protected View contentView;
+    protected View emptyView;
+    protected View errorView;
+    protected View progressView;
+
 
     protected TextView emptyTextView;
     protected TextView errorTextView;
@@ -35,99 +35,96 @@ public class StateLayout extends FrameLayout{
 
     protected Button errorButton;
     protected Button emptyButton;
+
     public StateLayout(Context context) {
-        super(context);
-        init();
+        this(context,null);
     }
 
 
 
     public StateLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context,attrs);
     }
 
     public StateLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context,attrs);
     }
 
-    private void init() {
-        initViews();
+    private void init(Context context,AttributeSet attrs) {
+        parseAttrs(context,attrs);
 
-        currentShowingView = content;
+        currentShowingView = contentView;
         emptyView.setVisibility(GONE);
         errorView.setVisibility(GONE);
         progressView.setVisibility(GONE);
     }
 
-    private void initViews() {
-        content = new FrameLayout(getContext());
-        content.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        addView(content);
+    private void parseAttrs(Context context, AttributeSet attrs) {
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-        /**********************************************************************************************/
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StateLayout, 0, 0);
 
-        emptyView = new LinearLayout(getContext());
-        initInnerView(emptyView);
+        /******************************************************************************************/
+        int progressViewId = a.getResourceId(R.styleable.StateLayout_progressView, -1);
+        if(progressViewId == -1)
+        {
+            progressView = inflater.inflate(R.layout.view_progress,this,false);
+            progressTextView = (TextView) progressView.findViewById(R.id.progressTextView);
+        }
+        else
+        {
+            progressView = inflater.inflate(progressViewId,this,false);
+        }
+        addView(progressView);
+        /******************************************************************************************/
 
 
-        emptyButton = new Button(getContext());
-        emptyButton.setText("重试");
-        emptyButton.setLayoutParams(obtainLayoutParams());
-        emptyView.addView(emptyButton);
+
+        /******************************************************************************************/
+        int errorViewId = a.getResourceId(R.styleable.StateLayout_errorView, -1);
+        if(errorViewId > -1)
+        {
+            errorView = inflater.inflate(R.layout.view_error,this,false);
+            errorTextView = (TextView) errorView.findViewById(R.id.errorTextView);
+            errorButton = (Button) errorView.findViewById(R.id.errorButton);
+        }
+        else
+        {
+            errorView = inflater.inflate(errorViewId,this,false);
+        }
+
+        addView(errorView);
+        /******************************************************************************************/
 
 
-        emptyTextView = new TextView(getContext());
-        emptyTextView.setLayoutParams(obtainLayoutParams());
-        emptyView.addView(emptyTextView);
-        /**********************************************************************************************/
 
-        errorView = new LinearLayout(getContext());
-        initInnerView(errorView);
+        /******************************************************************************************/
+        int emptyViewId = a.getResourceId(R.styleable.StateLayout_emptyView, -1);
+        if(emptyViewId > -1)
+        {
+            emptyView = inflater.inflate(R.layout.view_empty,this,false);
+            emptyTextView = (TextView) emptyView.findViewById(R.id.emptyTextView);
+            emptyButton = (Button) emptyView.findViewById(R.id.emptyButton);
+        }
+        else
+        {
+            emptyView = inflater.inflate(emptyViewId,this,false);
+        }
 
-        errorButton = new Button(getContext());
-        errorButton.setText("重试");
-        errorButton.setLayoutParams(obtainLayoutParams());
-        errorView.addView(errorButton);
-
-        errorTextView = new TextView(getContext());
-        errorTextView.setLayoutParams(obtainLayoutParams());
-        errorView.addView(errorTextView);
-        /**********************************************************************************************/
-
-        progressView = new LinearLayout(getContext());
-        initInnerView(progressView);
-
-        ProgressBar progressBar = new ProgressBar(getContext());
-        progressView.addView(progressBar);
-
-        progressTextView = new TextView(getContext());
-        progressTextView.setLayoutParams(obtainLayoutParams());
-        progressView.addView(progressTextView);
-
+        addView(emptyView);
+        /******************************************************************************************/
+        a.recycle();
     }
 
-
-    private LayoutParams obtainLayoutParams()
+    private void checkIsContentView(View view)
     {
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-        return layoutParams;
+        if(contentView == null && view != errorView && view != progressView && view != emptyView)
+        {
+            contentView = view;
+        }
     }
-
-
-    private void initInnerView(LinearLayout innerView)
-    {
-        innerView.setGravity(Gravity.CENTER);
-        innerView.setOrientation(LinearLayout.VERTICAL);
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        addView(innerView,layoutParams);
-    }
-
 
     public void switchWithAnimation(final View toBeShown)
     {
@@ -167,22 +164,10 @@ public class StateLayout extends FrameLayout{
     }
 
 
-    public void addContentView(View content)
-    {
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        addContentView(content,layoutParams);
-    }
-    public void addContentView(View content, ViewGroup.LayoutParams layoutParams)
-    {
-        this.content.addView(content,layoutParams);
-    }
-
-
     private View currentShowingView;
     public void showContentView()
     {
-        switchWithAnimation(content);
+        switchWithAnimation(contentView);
     }
     public void showEmptyView()
     {
@@ -191,7 +176,6 @@ public class StateLayout extends FrameLayout{
 
     public void showEmptyView(String msg)
     {
-
         onHideContentView();
         emptyTextView.setText(msg);
         switchWithAnimation(emptyView);
@@ -256,5 +240,53 @@ public class StateLayout extends FrameLayout{
     protected void onHideContentView()
     {
         //Override me
+    }
+
+
+
+    /**
+     * addView
+     */
+
+    @Override
+    public void addView(View child) {
+        checkIsContentView(child);
+        super.addView(child);
+    }
+
+    @Override
+    public void addView(View child, int index) {
+        checkIsContentView(child);
+        super.addView(child, index);
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        checkIsContentView(child);
+        super.addView(child, index, params);
+    }
+
+    @Override
+    public void addView(View child, ViewGroup.LayoutParams params) {
+        checkIsContentView(child);
+        super.addView(child, params);
+    }
+
+    @Override
+    public void addView(View child, int width, int height) {
+        checkIsContentView(child);
+        super.addView(child, width, height);
+    }
+
+    @Override
+    protected boolean addViewInLayout(View child, int index, ViewGroup.LayoutParams params) {
+        checkIsContentView(child);
+        return super.addViewInLayout(child, index, params);
+    }
+
+    @Override
+    protected boolean addViewInLayout(View child, int index, ViewGroup.LayoutParams params, boolean preventRequestLayout) {
+        checkIsContentView(child);
+        return super.addViewInLayout(child, index, params, preventRequestLayout);
     }
 }
