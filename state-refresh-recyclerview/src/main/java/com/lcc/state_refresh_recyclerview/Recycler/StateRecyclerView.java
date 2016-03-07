@@ -65,7 +65,7 @@ public class StateRecyclerView extends StateLayout {
         swipeRefreshLayout = new SwipeRefreshLayout(getContext());
         swipeRefreshLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        addContentView(swipeRefreshLayout);
+        addView(swipeRefreshLayout);
 
         recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

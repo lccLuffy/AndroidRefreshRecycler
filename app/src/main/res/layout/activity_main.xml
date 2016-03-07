@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lcc.refresh.MainActivity">
 
-    <com.lcc.refresh.Recycler.StateRecyclerView
+    <com.lcc.state_refresh_recyclerview.Recycler.StateRecyclerView
         android:id="@+id/stateRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -16,17 +16,10 @@ import android.widget.TextView;
  * Created by lcc_luffy on 2016/1/30.
  */
 public class StateLayout extends FrameLayout{
-
-    public static final String DEFAULT_ERROR_TEXT = "Something went wrong-_-";
-    public static final String DEFAULT_EMPTY_TEXT = "here is empty";
-    public static final String DEFAULT_PROGRESS_TEXT = "loading...";
-
-
     protected View contentView;
     protected View emptyView;
     protected View errorView;
     protected View progressView;
-
 
     protected TextView emptyTextView;
     protected TextView errorTextView;
@@ -39,7 +32,6 @@ public class StateLayout extends FrameLayout{
     public StateLayout(Context context) {
         this(context,null);
     }
-
 
 
     public StateLayout(Context context, AttributeSet attrs) {
@@ -84,7 +76,7 @@ public class StateLayout extends FrameLayout{
 
         /******************************************************************************************/
         int errorViewId = a.getResourceId(R.styleable.StateLayout_errorView, -1);
-        if(errorViewId > -1)
+        if(errorViewId == -1)
         {
             errorView = inflater.inflate(R.layout.view_error,this,false);
             errorTextView = (TextView) errorView.findViewById(R.id.errorTextView);
@@ -102,7 +94,7 @@ public class StateLayout extends FrameLayout{
 
         /******************************************************************************************/
         int emptyViewId = a.getResourceId(R.styleable.StateLayout_emptyView, -1);
-        if(emptyViewId > -1)
+        if(emptyViewId == -1)
         {
             emptyView = inflater.inflate(R.layout.view_empty,this,false);
             emptyTextView = (TextView) emptyView.findViewById(R.id.emptyTextView);
@@ -126,6 +118,8 @@ public class StateLayout extends FrameLayout{
         }
     }
 
+
+    private View currentShowingView;
     public void switchWithAnimation(final View toBeShown)
     {
         final View toBeHided = currentShowingView;
@@ -164,14 +158,14 @@ public class StateLayout extends FrameLayout{
     }
 
 
-    private View currentShowingView;
+
     public void showContentView()
     {
         switchWithAnimation(contentView);
     }
     public void showEmptyView()
     {
-        showEmptyView(DEFAULT_EMPTY_TEXT);
+        showEmptyView(null);
     }
 
     public void showEmptyView(String msg)
@@ -179,33 +173,31 @@ public class StateLayout extends FrameLayout{
         onHideContentView();
         emptyTextView.setText(msg);
         switchWithAnimation(emptyView);
-
     }
 
     public void showErrorView()
     {
-        showErrorView(DEFAULT_ERROR_TEXT);
+        showErrorView(null);
     }
 
     public void showErrorView(String msg)
     {
         onHideContentView();
-        errorTextView.setText(msg);
+        if (msg != null)
+            errorTextView.setText(msg);
         switchWithAnimation(errorView);
-
     }
 
     public void showProgressView()
     {
-        showProgressView(DEFAULT_PROGRESS_TEXT);
+        showProgressView(null);
     }
     public void showProgressView(String msg)
     {
         onHideContentView();
-        progressTextView.setText(msg);
-
+        if (msg != null)
+            progressTextView.setText(msg);
         switchWithAnimation(progressView);
-
     }
 
     public void setErrorAction(String action, final OnClickListener onErrorButtonClickListener)
