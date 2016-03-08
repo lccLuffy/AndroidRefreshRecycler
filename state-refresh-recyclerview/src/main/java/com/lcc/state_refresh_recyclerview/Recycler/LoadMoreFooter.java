@@ -55,7 +55,7 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
 
     public void onMoreViewShowed()
     {
-        if(onLoadMoreListener != null && dataCount == 0)
+        if(onLoadMoreListener != null && dataCount != 0)
             onLoadMoreListener.onLoadMore();
     }
 
