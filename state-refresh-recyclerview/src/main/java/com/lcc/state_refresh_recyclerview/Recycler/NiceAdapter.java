@@ -21,11 +21,11 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
 
     final List<ItemView> headers;
     final List<ItemView> footers;
-
-    private EventDelegate eventDelegate;
+    final List<OnDataCountChangeListener> onDataCountChangeListeners;
 
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
+
     /**
      * Lock used to modify the contents of {@link #data}. Any write operation
      * performed on the array should be synchronized on this lock.
@@ -39,23 +39,33 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
 
     protected Context context;
 
+    LoadMoreFooter loadMoreFooter;
     public NiceAdapter(Context context)
     {
         this.context = context;
         data = new ArrayList<>();
         headers = new ArrayList<>();
         footers = new ArrayList<>();
-
-        eventDelegate = new DefaultEventDelegate(this);
+        onDataCountChangeListeners = new ArrayList<>();
+        loadMoreFooter = new LoadMoreFooter(context);
+        addOnDataCountChangeListener(loadMoreFooter);
+        addFooterView(loadMoreFooter);
     }
 
     public void clear(boolean notifyDataSetChanged)
     {
+        dataPreviewSize = data.size();
         data.clear();
+        checkIsDataChanged();
         if(notifyDataSetChanged)
         {
             notifyDataSetChanged();
         }
+    }
+
+    public LoadMoreFooter getLoadMoreFooter()
+    {
+        return loadMoreFooter;
     }
 
     public boolean isDataEmpty()
@@ -89,9 +99,9 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
 
     private void checkIsDataChanged()
     {
-        if(data.size() != dataPreviewSize)
+        for (OnDataCountChangeListener listener : onDataCountChangeListeners)
         {
-            eventDelegate.onDataChanged(data.size() - dataPreviewSize);
+            listener.OnDataCountChange(dataPreviewSize,data.size(),getItemCount());
         }
     }
 
@@ -263,6 +273,7 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         if (v==null)
             throw new NullPointerException("ItemView can't be null");
         footers.add(v);
+        checkIsDataChanged();
     }
 
     public void addHeaderView(ItemView v)
@@ -270,6 +281,7 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         if (v==null)
             throw new NullPointerException("ItemView can't be null");
         headers.add(v);
+        checkIsDataChanged();
     }
 
     private class EmptyViewHolder extends NiceViewHolder {
@@ -303,31 +315,10 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         this.mItemLongClickListener = listener;
     }
 
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener)
-    {
-        eventDelegate.setOnLoadMoreListener(onLoadMoreListener);
-    }
-
-    public void setOnErrorViewClickListener(View.OnClickListener onErrorViewClickListener)
-    {
-        eventDelegate.setOnErrorViewClickListener(onErrorViewClickListener);
-    }
 
     public GridLayoutManager.SpanSizeLookup obtainGridSpanSizeLookUp(int maxSpan)
     {
         return new GridLayoutSpanSizeLookup(maxSpan);
-    }
-    public void showErrorView()
-    {
-        eventDelegate.showErrorView();
-    }
-    public void showNoMoreView()
-    {
-        eventDelegate.showNoMoreView();
-    }
-    public void showLoadMoreView()
-    {
-        eventDelegate.showLoadMoreView();
     }
 
     private class GridLayoutSpanSizeLookup extends GridLayoutManager.SpanSizeLookup
@@ -352,27 +343,20 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         }
     }
 
+    public void addOnDataCountChangeListener(OnDataCountChangeListener onDataCountChangeListener)
+    {
+        if(onDataCountChangeListener == null)
+            throw new NullPointerException("OnDataCountChangeListener cannot be null");
+        onDataCountChangeListeners.add(onDataCountChangeListener);
+    }
     public interface ItemView
     {
         View onCreateView(ViewGroup parent);
         void onBindViewHolder(int realPosition);
     }
 
-    public interface OnLoadMoreListener
+    public interface OnDataCountChangeListener
     {
-        void onLoadMore();
+        void OnDataCountChange(int beforeDataCount, int afterDataCount, int allCount);
     }
-
-    public interface EventDelegate
-    {
-        void onDataChanged(int offset);
-        void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener);
-        void setOnErrorViewClickListener(View.OnClickListener onErrorViewClickListener);
-        void showErrorView();
-        void showNoMoreView();
-        void showLoadMoreView();
-
-    }
-
-
 }

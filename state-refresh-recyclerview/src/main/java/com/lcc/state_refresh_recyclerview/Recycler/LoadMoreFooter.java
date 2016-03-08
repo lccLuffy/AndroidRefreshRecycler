@@ -11,83 +11,84 @@ import com.lcc.state_refresh_recyclerview.R;
 /**
  * Created by lcc_luffy on 2016/1/11.
  */
-public class DefaultEventDelegate implements NiceAdapter.EventDelegate{
+public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,NiceAdapter.ItemView{
 
     public static final int IS_SHOW_MORE_VIEW = 0;
     public static final int IS_SHOW_NO_MORE_VIEW = 1;
     public static final int IS_SHOW_ERROR_VIEW = 2;
 
-
     private boolean enableReload = true;
 
-
-    private NiceAdapter.OnLoadMoreListener onLoadMoreListener;
+    int dataCount;
+    private OnLoadMoreListener onLoadMoreListener;
     private View.OnClickListener onErrorClickListener;
 
     private int state = IS_SHOW_MORE_VIEW;
 
     private FooterView footer;
 
-    private NiceAdapter niceAdapter;
-    public DefaultEventDelegate(NiceAdapter niceAdapter)
+    public LoadMoreFooter(Context context)
     {
-        this.niceAdapter = niceAdapter;
-        footer = new FooterView(niceAdapter.getContext());
-        footer.hide();
-        niceAdapter.addFooterView(footer);
+        footer = new FooterView(context);
     }
 
-    @Override
-    public void setOnLoadMoreListener(NiceAdapter.OnLoadMoreListener onLoadMoreListener) {
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
-    @Override
     public void setOnErrorViewClickListener(View.OnClickListener onErrorViewClickListener) {
         onErrorClickListener = onErrorViewClickListener;
     }
 
-    @Override
     public void showErrorView() {
         footer.showErrorView();
     }
 
-    @Override
     public void showNoMoreView() {
         footer.showNoMoreView();
     }
 
-    @Override
     public void showLoadMoreView() {
         footer.showMoreView();
-    }
-
-    @Override
-    public void onDataChanged(int offset) {
-        if(niceAdapter.isDataEmpty())
-            footer.hide();
-        else
-            footer.show();
     }
 
 
     public void onMoreViewShowed()
     {
-        if(onLoadMoreListener != null && !niceAdapter.isDataEmpty())
+        if(onLoadMoreListener != null && dataCount == 0)
             onLoadMoreListener.onLoadMore();
     }
 
     public void onErrorViewShowed()
     {
-
+        //// TODO: 2016/3/8  onErrorViewShowedListener
     }
 
     public void onNoMoreViewShowed()
     {
-
+        //// TODO: 2016/3/8 onNoMoreViewShowedListener
     }
 
-    private class FooterView implements NiceAdapter.ItemView
+    @Override
+    public void OnDataCountChange(int beforeDataCount, int afterDataCount, int allCount) {
+        dataCount = afterDataCount;
+        if(afterDataCount == 0)
+            footer.hide();
+        else
+            footer.show();
+    }
+
+    @Override
+    public View onCreateView(ViewGroup parent) {
+        return footer.onCreateView(parent);
+    }
+
+    @Override
+    public void onBindViewHolder(int realPosition) {
+        footer.onBindViewHolder(realPosition);
+    }
+
+    private class FooterView
     {
         private FrameLayout container;
         private View loadMoreView;
@@ -119,12 +120,10 @@ public class DefaultEventDelegate implements NiceAdapter.EventDelegate{
 
             showMoreView();
         }
-        @Override
         public View onCreateView(ViewGroup parent) {
             return container;
         }
 
-        @Override
         public void onBindViewHolder(int realPosition) {
             switch (state)
             {
@@ -183,5 +182,9 @@ public class DefaultEventDelegate implements NiceAdapter.EventDelegate{
             if(container.getVisibility() != View.VISIBLE)
                 container.setVisibility(View.VISIBLE);
         }
+    }
+    public interface OnLoadMoreListener
+    {
+        void onLoadMore();
     }
 }
