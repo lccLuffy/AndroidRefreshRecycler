@@ -30,6 +30,7 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
     public LoadMoreFooter(Context context)
     {
         footer = new FooterView(context);
+        footer.hide();
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
@@ -97,9 +98,9 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
 
         FooterView(Context context)
         {
-            loadMoreView = LayoutInflater.from(context).inflate(R.layout.progress_view,null);
-            noMoreView = LayoutInflater.from(context).inflate(R.layout.no_more_view,null);
-            errorView = LayoutInflater.from(context).inflate(R.layout.error_view,null);
+            loadMoreView = LayoutInflater.from(context).inflate(R.layout.footer_progress_view,null);
+            noMoreView = LayoutInflater.from(context).inflate(R.layout.footer_no_more_view,null);
+            errorView = LayoutInflater.from(context).inflate(R.layout.footer_error_view,null);
 
             errorView.setOnClickListener(new View.OnClickListener() {
                 @Override
