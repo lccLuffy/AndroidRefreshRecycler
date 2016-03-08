@@ -68,6 +68,11 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         return loadMoreFooter;
     }
 
+    public void removeLoadMoreFooter()
+    {
+        footers.remove(loadMoreFooter);
+    }
+
     public boolean isDataEmpty()
     {
         return data.isEmpty();
