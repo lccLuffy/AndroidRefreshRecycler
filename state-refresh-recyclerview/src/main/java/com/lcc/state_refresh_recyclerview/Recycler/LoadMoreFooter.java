@@ -98,6 +98,10 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
 
         FooterView(Context context)
         {
+            container = new FrameLayout(context);
+            container.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+
             loadMoreView = LayoutInflater.from(context).inflate(R.layout.footer_progress_view,container,false);
             noMoreView = LayoutInflater.from(context).inflate(R.layout.footer_no_more_view,container,false);
             errorView = LayoutInflater.from(context).inflate(R.layout.footer_error_view,container,false);
@@ -120,9 +124,6 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
                     }
                 }
             });
-
-            container = new FrameLayout(context);
-            container.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             showMoreView();
         }
