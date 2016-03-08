@@ -195,13 +195,13 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         return null;
     }
     @Override
-    final public NiceViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+    final public NiceViewHolder<T> onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = onCreateHeaderFooterViewByType(parent,viewType);
         if(view != null)
         {
             return new EmptyViewHolder(view);
         }
-        final NiceViewHolder niceViewHolder = onCreateNiceViewHolder(parent,viewType);
+        final NiceViewHolder<T> niceViewHolder = onCreateNiceViewHolder(parent,viewType);
         if (mItemClickListener!=null) {
             niceViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -223,7 +223,7 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         return niceViewHolder;
     }
 
-    abstract protected NiceViewHolder onCreateNiceViewHolder(ViewGroup parent, int viewType);
+    abstract protected NiceViewHolder<T> onCreateNiceViewHolder(ViewGroup parent, int viewType);
 
     @Override
     final public void onBindViewHolder(NiceViewHolder holder, int position) {
@@ -289,7 +289,7 @@ public abstract class NiceAdapter<T> extends RecyclerView.Adapter<NiceViewHolder
         checkIsDataChanged();
     }
 
-    private class EmptyViewHolder extends NiceViewHolder {
+    private class EmptyViewHolder extends NiceViewHolder<T> {
         public EmptyViewHolder(View itemView) {
             super(itemView);
         }
