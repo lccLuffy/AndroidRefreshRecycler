@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +48,13 @@ public class StateLayout extends FrameLayout{
     private void init(Context context,AttributeSet attrs) {
         parseAttrs(context,attrs);
 
+        emptyView.setVisibility(View.GONE);
+
+        errorView.setVisibility(View.GONE);
+
+        progressView.setVisibility(View.GONE);
+
         currentShowingView = contentView;
-        emptyView.setVisibility(GONE);
-        errorView.setVisibility(GONE);
-        progressView.setVisibility(GONE);
     }
 
     private void parseAttrs(Context context, AttributeSet attrs) {
@@ -112,9 +116,11 @@ public class StateLayout extends FrameLayout{
 
     private void checkIsContentView(View view)
     {
+        Log.i("state",view != null ? view.getClass().getName() : "add null view");
         if(contentView == null && view != errorView && view != progressView && view != emptyView)
         {
             contentView = view;
+            currentShowingView = contentView;
         }
     }
 

@@ -98,9 +98,14 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
 
         FooterView(Context context)
         {
-            loadMoreView = LayoutInflater.from(context).inflate(R.layout.footer_progress_view,null);
-            noMoreView = LayoutInflater.from(context).inflate(R.layout.footer_no_more_view,null);
-            errorView = LayoutInflater.from(context).inflate(R.layout.footer_error_view,null);
+            loadMoreView = LayoutInflater.from(context).inflate(R.layout.footer_progress_view,container,false);
+            noMoreView = LayoutInflater.from(context).inflate(R.layout.footer_no_more_view,container,false);
+            errorView = LayoutInflater.from(context).inflate(R.layout.footer_error_view,container,false);
+
+            container.addView(loadMoreView);
+            container.addView(noMoreView);
+            container.addView(errorView);
+
 
             errorView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,21 +147,11 @@ public class LoadMoreFooter implements NiceAdapter.OnDataCountChangeListener,Nic
 
         private void showView(View view)
         {
-            if (view!=null)
+            show();
+            for (int i = 0; i < container.getChildCount(); i++)
             {
-                show();
-                if (view.getParent()==null)
-                    container.addView(view);
-
-                for (int i = 0; i < container.getChildCount(); i++)
-                {
-                    if (container.getChildAt(i) == view) view.setVisibility(View.VISIBLE);
-                    else container.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
-            else
-            {
-                hide();
+                if (container.getChildAt(i) == view) view.setVisibility(View.VISIBLE);
+                else container.getChildAt(i).setVisibility(View.GONE);
             }
         }
 
