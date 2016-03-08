@@ -43,7 +43,12 @@ public class StateRecyclerView extends StateLayout {
         setErrorAction("重试", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onRefreshListener != null) {
+                if (onRefreshListener != null)
+                {
+                    if(recyclerView.getAdapter().getItemCount() == 0)
+                    {
+                        showProgressView();
+                    }
                     onRefreshListener.onRefresh();
                 }
             }
@@ -51,13 +56,18 @@ public class StateRecyclerView extends StateLayout {
 
         setEmptyAction("重试", new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (onRefreshListener != null) {
+            public void onClick(View v)
+            {
+                if (onRefreshListener != null)
+                {
+                    if(recyclerView.getAdapter().getItemCount() == 0)
+                    {
+                        showProgressView();
+                    }
                     onRefreshListener.onRefresh();
                 }
             }
         });
-
     }
 
     private void initViews()
@@ -93,8 +103,7 @@ public class StateRecyclerView extends StateLayout {
         }
 
         recyclerView.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(new UpdateListener());
-
+        adapter.registerAdapterDataObserver(new UpdateListener(adapter));
     }
 
 
@@ -234,10 +243,21 @@ public class StateRecyclerView extends StateLayout {
         showContentView();
         swipeRefreshLayout.setEnabled(true);
     }
+    public SwipeRefreshLayout getSwipeRefreshLayout() {
+        return swipeRefreshLayout;
+    }
 
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
 
     private class UpdateListener extends RecyclerView.AdapterDataObserver
     {
+        RecyclerView.Adapter adapter;
+        public UpdateListener(RecyclerView.Adapter adapter) {
+            this.adapter = adapter;
+        }
+
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             super.onItemRangeMoved(fromPosition, toPosition, itemCount);
@@ -275,42 +295,13 @@ public class StateRecyclerView extends StateLayout {
         }
         private void update()
         {
-            if (recyclerView.getAdapter() instanceof NiceAdapter)
+            if (adapter.getItemCount() == 0)
             {
-                NiceAdapter niceAdapter = ((NiceAdapter) recyclerView.getAdapter());
-
-                if(niceAdapter.isShowEmptyDataIsEmpty())
-                {
-                    if(niceAdapter.isDataEmpty())
-                    {
-                        showEmptyView();
-                    }
-                    else
-                        showRecyclerView();
-                }
-                else
-                {
-                    if(niceAdapter.getItemCount() == 0)
-                    {
-                        showEmptyView();
-                    }
-                    else
-                        showRecyclerView();
-                }
-
-
+                showEmptyView();
             }
             else
             {
-                if (recyclerView.getAdapter().getItemCount() == 0)
-                {
-
-                    showEmptyView();
-                }
-                else
-                {
-                    showRecyclerView();
-                }
+                showRecyclerView();
             }
         }
     }
