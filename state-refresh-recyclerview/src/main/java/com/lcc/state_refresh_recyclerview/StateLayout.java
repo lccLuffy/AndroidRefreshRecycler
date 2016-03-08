@@ -57,57 +57,57 @@ public class StateLayout extends FrameLayout{
         LayoutInflater inflater = LayoutInflater.from(context);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StateLayout, 0, 0);
+        int progressViewId;
+        int errorViewId;
+        int emptyViewId;
+        try
+        {
+            progressViewId = a.getResourceId(R.styleable.StateLayout_progressView, -1);
+            errorViewId = a.getResourceId(R.styleable.StateLayout_errorView, -1);
+            emptyViewId = a.getResourceId(R.styleable.StateLayout_emptyView, -1);
+
+        } finally
+        {
+            a.recycle();
+        }
 
         /******************************************************************************************/
-        int progressViewId = a.getResourceId(R.styleable.StateLayout_progressView, -1);
-        if(progressViewId == -1)
-        {
-            progressView = inflater.inflate(R.layout.view_progress,this,false);
+
+        if (progressViewId < 0) {
+            progressView = inflater.inflate(R.layout.view_progress, this, false);
             progressTextView = (TextView) progressView.findViewById(R.id.progressTextView);
-        }
-        else
-        {
-            progressView = inflater.inflate(progressViewId,this,false);
+        } else {
+            progressView = inflater.inflate(progressViewId, this, false);
         }
         addView(progressView);
         /******************************************************************************************/
 
-
-
         /******************************************************************************************/
-        int errorViewId = a.getResourceId(R.styleable.StateLayout_errorView, -1);
-        if(errorViewId == -1)
-        {
-            errorView = inflater.inflate(R.layout.view_error,this,false);
+
+        if (errorViewId < 0) {
+            errorView = inflater.inflate(R.layout.view_error, this, false);
             errorTextView = (TextView) errorView.findViewById(R.id.errorTextView);
             errorButton = (Button) errorView.findViewById(R.id.errorButton);
-        }
-        else
-        {
-            errorView = inflater.inflate(errorViewId,this,false);
+        } else {
+            errorView = inflater.inflate(errorViewId, this, false);
         }
 
         addView(errorView);
         /******************************************************************************************/
 
-
-
         /******************************************************************************************/
-        int emptyViewId = a.getResourceId(R.styleable.StateLayout_emptyView, -1);
-        if(emptyViewId == -1)
-        {
-            emptyView = inflater.inflate(R.layout.view_empty,this,false);
+
+        if (emptyViewId < 0) {
+            emptyView = inflater.inflate(R.layout.view_empty, this, false);
             emptyTextView = (TextView) emptyView.findViewById(R.id.emptyTextView);
             emptyButton = (Button) emptyView.findViewById(R.id.emptyButton);
-        }
-        else
-        {
-            emptyView = inflater.inflate(emptyViewId,this,false);
+        } else {
+            emptyView = inflater.inflate(emptyViewId, this, false);
         }
 
         addView(emptyView);
         /******************************************************************************************/
-        a.recycle();
+
     }
 
     private void checkIsContentView(View view)
@@ -138,7 +138,6 @@ public class StateLayout extends FrameLayout{
                     toBeHided.setVisibility(GONE);
                 }
             });
-
         }
 
         if(toBeShown != null)
@@ -203,30 +202,14 @@ public class StateLayout extends FrameLayout{
     public void setErrorAction(String action, final OnClickListener onErrorButtonClickListener)
     {
         errorButton.setText(action);
-        errorButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onErrorButtonClickListener != null)
-                {
-                    onErrorButtonClickListener.onClick(v);
-                }
-            }
-        });
+        errorButton.setOnClickListener(onErrorButtonClickListener);
     }
 
 
     public void setEmptyAction(String action, final OnClickListener onEmptyButtonClickListener)
     {
         emptyButton.setText(action);
-        emptyButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onEmptyButtonClickListener != null)
-                {
-                    onEmptyButtonClickListener.onClick(v);
-                }
-            }
-        });
+        emptyButton.setOnClickListener(onEmptyButtonClickListener);
     }
 
     protected void onHideContentView()

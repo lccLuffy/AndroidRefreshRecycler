@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.lcc.state_refresh_recyclerview.Recycler.NiceAdapter;
 import com.lcc.state_refresh_recyclerview.Recycler.NiceViewHolder;
 import com.lcc.state_refresh_recyclerview.Recycler.StateRecyclerView;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         stateRecyclerView.setAdapter(adapter,true);
 
         data = new ArrayList<>();
+
+
+        ProgressWheel
 
         for (int i = 0; i < 15; i++)
         {
